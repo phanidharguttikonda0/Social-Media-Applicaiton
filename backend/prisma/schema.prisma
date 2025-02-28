@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Account{
+  PRIVATE
+  PUBLIC
+}
+
+model Profile{
+  user_id Int @id @default(autoincrement())
+  username String @unique
+  name String?
+  mailId String @unique
+  mobile String @unique
+  password String
+  bio String?
+  account Account
+  location_id Int
+  following Int
+  followers Int
+  profilePicture String
+  time DateTime @default(now())
+  likes Likes[]
+  comments Comments[]
+  Posts Posts[] 
+  viewedStories StoryViews[]
+}
+
+model Location{
+  location_id Int @id @default(autoincrement())
+  State String @unique
+  Country String @unique
+}
+
+enum PostsType{
+  VIDEO
+  IMAGE
+}
+
+model Posts{
+  post_id Int @id @default(autoincrement())
+  post_bio String?
+  created_date DateTime @default(now())
+  type PostsType
+  CDNURL String
+  totalLikes Int
+  user_id Int
+  user    Profile   @relation(fields: [user_id], references: [user_id])
+  likes Likes[]
+  comments Comments[]
+  @@index([user_id])
+}
+
+
+model Stories{
+  story_id Int @id @default(autoincrement())
+  user_id Int 
+  created_time DateTime @default(now())
+  CDNURL String
+  type PostsType
+  storyViews StoryViews[]
+  @@index([user_id])
+}
+
+model Comments{
+  comment_id Int @id @default(autoincrement())
+  comment String
+  post_id Int
+  user_id Int
+  // the user_id refers to the commented user id
+  created_time DateTime @default(now())
+  post    Posts   @relation(fields: [post_id], references: [post_id])
+  user         Profile   @relation(fields: [user_id], references: [user_id])
+  @@index([post_id])
+}
+
+
+model Likes{
+  like_id Int @id @default(autoincrement())
+  post_id Int
+  user_id Int
+  post Posts @relation(fields: [post_id], references: [post_id])
+  user         Profile   @relation(fields: [user_id], references: [user_id])
+  @@index([post_id])
+}
+
+model StoryViews{
+  viewed_id Int @id @default(autoincrement())
+  story_id Int 
+  user_id Int 
+  story Stories @relation(fields: [story_id], references: [story_id])
+  user         Profile   @relation(fields: [user_id], references: [user_id])
+  @@index([story_id])
+}
+
+
+model Connections{
+  id Int @id @default(autoincrement())
+  user_id Int
+  following_user_id Int
+  started_following DateTime @default(now())
+  @@index([user_id])
+}
+
+
+enum NotificationType{
+  LIKE 
+  COMMENT 
+  PENDING
+  FOLLOW
+}
+
+model Notifications{
+  id Int @id @default(autoincrement())
+  user_id Int // to whom the notification to be sent
+  type NotificationType // if pending then it's a follow request for a private account
+  sent_user_id Int
+  post_id Int
+  user_viewed Boolean @default(false)
+  time DateTime @default(now())
+  @@index([user_id])
+}
