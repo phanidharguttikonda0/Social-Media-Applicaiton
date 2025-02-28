@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { authorizationHeader, hashPassword } from "../Services/Authentication";
-
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient() ;
 
 export async function signUp(req: any, res:any) {
@@ -29,7 +29,7 @@ export async function signUp(req: any, res:any) {
                 password: await hashPassword(password),
                 username: username,
                 mobile: mobile,
-                location_id: locationResult?.location_id as number,
+                location_id: locationResult?.location_id || 1,
                 account: "PUBLIC",
                 followers: 0,
                 following: 1,
@@ -60,13 +60,17 @@ export async function signIn(req: any, res: any){
                 user_id: true
             }
         }) ;
-        if(result?.password === password) {
+        if(!result) res.json({message: "user not found", data: null})
+        else{
+            const isMatch = await bcrypt.compare(req.body.password, result.password ) ;
+        if(isMatch) {
 
             // here we are going to return the authorization header
             
-            res.json({message: 'success', data: authorizationHeader(username, result.user_id)}) ;
+            res.json({message: 'success', data: await authorizationHeader(username, result.user_id)}) ;
         } 
         else res.json({message: "failure", data: null}) ;
+        }
     }catch(err){
         console.log(`The error was ${err}`) ;
         res.json({message: "error occured", data: null})
