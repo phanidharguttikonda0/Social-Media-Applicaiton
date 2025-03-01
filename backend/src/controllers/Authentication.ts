@@ -1,9 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { authorizationHeader, hashPassword } from "../Services/Authentication";
+import { AuthenticatedRequest } from "../types/Profile";
+import { Response } from "express";
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient() ;
 
-export async function signUp(req: any, res:any) {
+export async function signUp(req: AuthenticatedRequest, res:Response) {
     try{
         const mailId = req.body.mailId;
         const password = req.body.password;
@@ -47,7 +49,7 @@ export async function signUp(req: any, res:any) {
     }
 }
 
-export async function signIn(req: any, res: any){
+export async function signIn(req: AuthenticatedRequest, res:Response){
     try{
         const password = await hashPassword(req.body.password);
         const username = req.body.username ;
@@ -78,7 +80,7 @@ export async function signIn(req: any, res: any){
 }
 
 
-export async function forgotPassword(req: any, res: any){
+export async function forgotPassword(req: AuthenticatedRequest, res:Response){
     try{
 
     }catch(err){

@@ -58,9 +58,11 @@ model Posts{
   totalLikes Int
   user_id Int
   user    Profile   @relation(fields: [user_id], references: [user_id])
-  likes Likes[]
-  comments Comments[]
+  likes Likes[] 
+  comments Comments[] 
+  Notifications Notifications[]
   @@index([user_id])
+  
 }
 
 
@@ -81,7 +83,7 @@ model Comments{
   user_id Int
   // the user_id refers to the commented user id
   created_time DateTime @default(now())
-  post    Posts   @relation(fields: [post_id], references: [post_id])
+  post    Posts   @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
   user         Profile   @relation(fields: [user_id], references: [user_id])
   @@index([post_id])
 }
@@ -91,7 +93,7 @@ model Likes{
   like_id Int @id @default(autoincrement())
   post_id Int
   user_id Int
-  post Posts @relation(fields: [post_id], references: [post_id])
+  post Posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
   user         Profile   @relation(fields: [user_id], references: [user_id])
   @@index([post_id])
 }
@@ -128,6 +130,7 @@ model Notifications{
   type NotificationType // if pending then it's a follow request for a private account
   sent_user_id Int
   post_id Int
+  post Posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
   user_viewed Boolean @default(false)
   time DateTime @default(now())
   @@index([user_id])
