@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthorizationCheck } from "../middlewares/Authorization";
-import { createPost, deleteComment, deletePost, getComments, getLikes, getPosts, postComment, postLike } from "../controllers/Posts";
+import { createPost, deleteComment, deletePost, getComments, getLikes, getPosts, getReels, postComment, postLike } from "../controllers/Posts";
 
 const router = Router() ;
 
@@ -20,5 +20,7 @@ router.get('/get-comments:postId', AuthorizationCheck, getComments) ;
 router.get('/get-likes:postId', AuthorizationCheck, getLikes) ;
 
 router.get('/get-posts', AuthorizationCheck, getPosts) ;
+
+router.get('/get-reels', AuthorizationCheck, getReels) ;
 
 export default router

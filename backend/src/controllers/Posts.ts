@@ -39,3 +39,8 @@ export async function getComments(req: AuthenticatedRequest, res: Response){
 export async function getLikes(req:AuthenticatedRequest, res: Response){
 
 }
+
+
+export async function getReels(req:AuthenticatedRequest, res:Response){
+    // we are going to return the posts that are type of VIDEO
+}
