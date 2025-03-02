@@ -36,6 +36,7 @@ model Profile{
   comments Comments[]
   Posts Posts[] 
   viewedStories StoryViews[]
+  Notification Notifications[]
 }
 
 model Location{
@@ -102,7 +103,7 @@ model StoryViews{
   viewed_id Int @id @default(autoincrement())
   story_id Int 
   user_id Int 
-  story Stories @relation(fields: [story_id], references: [story_id])
+  story Stories @relation(fields: [story_id], references: [story_id], onDelete: Cascade)
   user         Profile   @relation(fields: [user_id], references: [user_id])
   @@index([story_id])
 }
@@ -131,6 +132,7 @@ model Notifications{
   sent_user_id Int
   post_id Int
   post Posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user Profile @relation(fields: [sent_user_id], references: [user_id], onDelete: Cascade)
   user_viewed Boolean @default(false)
   time DateTime @default(now())
   @@index([user_id])

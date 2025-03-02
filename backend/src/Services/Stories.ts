@@ -3,7 +3,10 @@ import { getaccountType, isFollowing } from "./Posts";
 
 const prisma =  new PrismaClient() ;
 
-export async function getUserId(storyId: number){
+
+
+
+export async function getUserIdbyStoryId(storyId: number){
     try{
         
         const result = await prisma.stories.findUnique({
@@ -25,7 +28,7 @@ export async function getUserId(storyId: number){
 export async function isUserValid(userId: number, storyId: number){
 
     try{
-        const owner_id = await getUserId(storyId) as number;
+        const owner_id = await getUserIdbyStoryId(storyId) as number;
         if(owner_id === -1) return false ;
         const accountType = await getaccountType(owner_id) ;
         if(accountType === "PRIVATE"){

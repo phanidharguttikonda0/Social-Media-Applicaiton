@@ -13,9 +13,9 @@ app.use(express.json()) ;
 
 app.use('/profile',profileRouter) ; // has been completed
 app.use('/authentication', authenticationRouter) ; // has been completed
-app.use('/posts', postsRouter) ;
-app.use('/stories', storiesRouter) ;
-app.use('/', OtherRoutes) ;
+app.use('/posts', postsRouter) ; // done completing except few
+app.use('/stories', storiesRouter) ; // done completing except few
+app.use('/', OtherRoutes) ; // done completing except few
 
 // pending are messages and going Live part
 
